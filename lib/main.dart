@@ -31,18 +31,11 @@ class _QuizPageState extends State<QuizPage> {
   QuesBank quesBank = QuesBank();
   int scoreFinal=0;
   void checkAnswer(bool userAns) {
-    Function closeFunction = () {
-      setState(() {
-        scoreFinal = 0;
-        quesBank.reset();
-        scoreKeeper = [];
-      });
-    };  
 
     setState(() {
       if (quesBank.getQuesAns() == userAns)
         scoreKeeper.add(Icon(Icons.check, color: Colors.green));
-      else
+        else
         scoreKeeper.add(Icon(Icons.close, color: Colors.red));
       if (quesBank.isFinished() == true) {
         scoreKeeper.forEach((v){ 
@@ -51,24 +44,13 @@ class _QuizPageState extends State<QuizPage> {
           context: context,
           title: "FINISHED",
           desc: "Score: $scoreFinal",
-          buttons: [
-            DialogButton(
-              child: Text(
-                "RESET",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () {
-                closeFunction();
-                Navigator.pop(context);
-              },
-              width: 120,
-            )
-          ],
-          closeFunction: closeFunction,
         ).show();
-        return;
+        quesBank.reset();
+        scoreKeeper=[];
+        scoreFinal=0;
       }
-      quesBank.nextQues();
+      else{
+      quesBank.nextQues();}
     });
   }
 
