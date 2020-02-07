@@ -47,4 +47,15 @@ bool getQuesAns()
 {
   return _quesList[_qNumber].qAns;
 }
+
+bool isFinished(){
+ if (_qNumber == _quesList.length-1)
+ return true;
+ else
+ return false;
+}
+void reset()
+{
+  _qNumber=0;
+}
 }

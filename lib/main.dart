@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'questions.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(Quizzler());
 
@@ -28,13 +29,46 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
   QuesBank quesBank = QuesBank();
+  int scoreFinal=0;
   void checkAnswer(bool userAns) {
+    Function closeFunction = () {
+      setState(() {
+        scoreFinal = 0;
+        quesBank.reset();
+        scoreKeeper = [];
+      });
+    };  
+
     setState(() {
-      quesBank.nextQues();
       if (quesBank.getQuesAns() == userAns)
         scoreKeeper.add(Icon(Icons.check, color: Colors.green));
       else
         scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+      if (quesBank.isFinished() == true) {
+        scoreKeeper.forEach((v){ 
+          if (v.icon.codePoint==0xe5ca) scoreFinal++;});
+        Alert(
+          context: context,
+          title: "FINISHED",
+          desc: "Score: $scoreFinal",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "RESET",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                closeFunction();
+                Navigator.pop(context);
+              },
+              width: 120,
+            )
+          ],
+          closeFunction: closeFunction,
+        ).show();
+        return;
+      }
+      quesBank.nextQues();
     });
   }
 
